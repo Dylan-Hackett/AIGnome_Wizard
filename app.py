@@ -20,17 +20,13 @@ def get_text():
     # Counting number of times the 'get_text' route is called
     session['counter'] += 1
 
-    # Reset 'last_answer' after 5 iterations
-    if session['counter'] >= 5:
-        session['last_answer'] = None
-        session['counter'] = 0
 
     if 'last_answer' not in session:
             # Generate a new question
-            prompt = f"Generate a question in a creepy and ghoulish manner (situation {random_num}):"
+            prompt = f"Generate a question in a surreal and mystic manner (situation {random_num}):"
     else:
         # Generate a related question based on the last answer
-        prompt = f"The answer to the last question was '{session['last_answer']}'. Please generate a related question in a creepy and ghoulish manner (situation {random_num}):"
+        prompt = f"The answer to the last question was '{session['last_answer']}'. Please generate a related question in a mystic and surreal manner (situation {random_num}):"
     # Call the OpenAI API
     response = openai.Completion.create(
         engine="text-curie-001",
