@@ -13,21 +13,21 @@ def get_text():
     random_num = random.randint(1, 100)
 
 
-    # Initializing counter
+
     if 'counter' not in session:
         session['counter'] = 0
 
-    # Counting number of times the 'get_text' route is called
+
     session['counter'] += 1
 
 
     if 'last_answer' not in session:
-            # Generate a new question
+         
             prompt = f"Generate a question in a surreal and mystic manner (situation {random_num}):"
     else:
-        # Generate a related question based on the last answer
+ 
         prompt = f"The answer to the last question was '{session['last_answer']}'. Please generate a related question in a mystic and surreal manner (situation {random_num}):"
-    # Call the OpenAI API
+
     response = openai.Completion.create(
         engine="text-curie-001",
         prompt=prompt,
@@ -40,7 +40,7 @@ def get_text():
     question = response.choices[0].text.strip()
     print("Generated Question:", question)
 
-    # Generate an answer
+
     prompt2 = f"The question '{question}' is asked. Please generate an answer"
 
     response = openai.Completion.create(
@@ -55,7 +55,7 @@ def get_text():
     answer = response.choices[0].text.strip()
     print("Answer:", answer)
 
-    # Store the last answer in the session and mark it as modified
+
     session['last_answer'] = answer
     session.modified = True
 
