@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Form Results</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .result-container {
+            max-width: 500px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #343a40;
+            color: white;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="result-container">
+        <h1 class="mb-4">Submitted Information</h1>
+        <p><strong>Name:</strong> {{session['name']}}</p>
+        <p><strong>Location:</strong> {{session['location']}}</p>
+        <p><strong>Favorite Language:</strong> {{session['language']}}</p>
+        <p><strong>Comment:</strong> {{session['comment']}}</p>
+        <a href="/" class="btn btn-primary">Go Back</a>
+    </div>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</body>
+</html>

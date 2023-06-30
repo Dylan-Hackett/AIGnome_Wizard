@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link href="https://fonts.googleapis.com/css?family=Baloo+2:400,800&display=swap" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <style>
+        body {
+            background-image: url("{{ url_for('static', filename='images/zigzag.png') }}");
+            height: 100vh;
+            margin: 0;
+            display: grid;
+            place-items: center;
+            font: 2vw system-ui;
+            background-color: olive;
+            }
+
+        .figure {
+            width: 200px;
+            height: 300px;
+            position: absolute;
+            margin-top: 20px;
+            transform: translateY(-50%);
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: contain;
+        }
+        #titleimg {
+            top: 10px;
+            left: 450px;
+            position: absolute;
+            width: 600px;
+            height: 200px;
+            animation: float 20s reverse infinite
+
+        }
+
+        #figure1 {
+            animation: float 10s ease-in-out infinite;
+            background-image: url("{{ url_for('static', filename='images/subject.png') }}");
+            top: 400px;
+            left: 30%;
+        }
+
+        #figure2 {
+            animation: float 8s ease-in-out infinite;
+            background-image: url("{{ url_for('static', filename='images/subject.png') }}");
+            top: 400px;
+            right: 30%;
+        }
+
+        .bubble {
+            min-width: 150px;
+            max-width: 500px; /* or whatever maximum width you prefer */
+            height: auto;
+            color: antiquewhite;
+            position: absolute;
+            top: 10%;
+            padding: 10px;
+            border-radius: 10px;
+        }
+
+        #bubble1 {
+            top: 200px;
+            left: 900px;
+            animation: float 5s ease-in-out infinite;
+        }
+
+        #bubble2 {
+            top: 200px;
+            left: 200px;
+            animation: float 10s ease-in-out infinite;
+        }
+
+        body p {
+            transform: translatey(0px);
+            text-transform: uppercase;
+            font-weight: bold;
+            max-height: 100px; /* Set the max-height value as per your requirement */
+            overflow-y: auto; /* Will create a vertical scrollbar when text overflows */
+            font-size: 15px;
+            color: olive;
+            background-color: beige;
+            padding: 50px;
+            border-radius: 200px;
+            position: relative;
+            box-shadow: 20px 20px burlywood;
+            font-family: "Baloo 2", cursive;
+}
+        body p::-webkit-scrollbar {
+            /* Hide scrollbar for Chrome, Safari and Opera */
+            display: none;
+        }
+
+        @keyframes exposure {
+            0% { opacity: 0; }
+            50% { opacity: 1; }
+            100% { opacity: 0; }
+        }
+
+        @keyframes scale {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.5); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes skew {
+            0% { transform: skewX(0); }
+            50% { transform: skewX(30deg); }
+            100% { transform: skewX(0); }
+        }
+
+        @keyframes flip {
+            0% { transform: scaleX(1); }
+            50% { transform: scaleX(-1); }
+            100% { transform: scaleX(1); }
+        }
+        @keyframes float {
+            0% {transform: translatey(0px);}
+            50% {transform: translatey(-20px);}
+            100% {transform: translatey(0px);}
+        }
+
+        @keyframes float2 {
+            0% {line-height: 30px;
+                transform: translatey(0px);
+                }
+            55% {transform: translatey(-20px);}
+
+            60% {line-height: 10px;}
+
+            100% {line-height: 30px;
+                transform: translatey(0px);
+                }
+            }
+
+        .rotatingForward {
+            animation-name: rotation;
+        }
+
+        .rotatingReverse {
+            animation-name: rotationReverse;
+        }
+    </style>
+</head>
+<body>
+    <img id="titleimg" src="{{ url_for('static', filename='images/wizard.png') }}" alt="Title Image">
+    <div class="figure rotating rotatingForward" id="figure1"></div>
+    <div class="figure rotating rotatingReverse" id="figure2"></div>
+    <div class="bubble" id="bubble1">
+        <p></p>
+    </div>
+    <div class="bubble" id="bubble2">
+        <p></p>
+    </div>
+
+    <script>
+var speed = 70; // Speed of scrolling. Lower value results in faster scrolling.
+var autoScrollInterval; // Variable to hold the setInterval function.
+
+$(document).ready(function() {
+    var isBubble1Question = true;
+    var speed = 90;
+    var autoScrollInterval;
+
+    // Initial API call
+    getText();
+
+    // Call API every 10 seconds
+    setInterval(getText, 12000);
+
+    function getText() {
+        $.getJSON("/get_text", function(data) {
+            console.log("Data received:", data);
+
+            var bubble1 = $('#bubble1 p');
+            var bubble2 = $('#bubble2 p');
+
+            // Fade out the old text
+            bubble1.fadeOut(500, function() {
+                // Update the text once the fade out is done
+                bubble1.text(isBubble1Question ? data.question : data.answer);
+                // Fade the new text back in
+                bubble1.fadeIn(500);
+
+                // Start autoscrolling
+                clearInterval(autoScrollInterval);
+                autoScrollInterval = setInterval(autoScroll, speed, bubble1);
+            });
+
+            bubble2.fadeOut(500, function() {
+                bubble2.text(isBubble1Question ? data.answer : data.question);
+                bubble2.fadeIn(500);
+
+                // Start autoscrolling
+                clearInterval(autoScrollInterval);
+                autoScrollInterval = setInterval(autoScroll, speed, bubble2);
+            });
+
+            // Flip the boolean for the next API call
+            isBubble1Question = !isBubble1Question;
+        });
+    }
+
+    function autoScroll(element) {
+        if (element.scrollTop() !== element[0].scrollHeight) {
+            element.scrollTop(element.scrollTop() + 1);
+        }
+        if (element.scrollTop() === element[0].scrollHeight) {
+            clearInterval(autoScrollInterval);
+        }
+    }
+});
+
+    </script>  
+</body>
+</html>
